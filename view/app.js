@@ -323,11 +323,11 @@ function displayFiles(files) {
         <div class="text-sm text-gray-500">${formatFileSize(file.size)}</div>
       </div>
       <div class="space-x-2">
-        <button onclick="downloadFile('${file.name}')" 
+        <button data-filename="${file.name}" data-action="download"
                 class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition-colors">
           Download
         </button>
-        <button onclick="deleteFile('${file.name}')" 
+        <button data-filename="${file.name}" data-action="delete"
                 class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors">
           Delete
         </button>
@@ -336,6 +336,20 @@ function displayFiles(files) {
   `
         )
         .join("");
+
+    const fileButtons = filesList.querySelectorAll('button[data-action]');
+    fileButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            const filename = this.getAttribute('data-filename');
+            const action = this.getAttribute('data-action');
+
+            if (action === 'download') {
+                downloadFile(filename);
+            } else if (action === 'delete') {
+                deleteFile(filename);
+            }
+        });
+    });
 }
 
 function downloadFile(filename) {
